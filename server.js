@@ -30,7 +30,6 @@ app.post("/events", async (req, res) => {
   res.send(result);
 });
 
-
 // Event Read
 app.get("/events", async (req, res) => {
   const result = await eventCollection.find().toArray();
@@ -43,18 +42,27 @@ app.get("/upcoming-events", async (req, res) => {
 });
 
 //Get a single event data for details
-app.get('/events/:id' , async(req,res) =>{
-   const {id} = req.params
-   const result = await eventCollection.findOne({_id : new ObjectId(id)})
-   res.send(result)
-})
+app.get("/events/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await eventCollection.findOne({ _id: new ObjectId(id) });
+  res.send(result);
+});
 
-// Get all event which a creator make 
-app.get('/my-events/:email' , async(req,res)=> {
-   const {email} = req.params
-   const result = await eventCollection.find({eventCreatorEmail : email}).toArray()
-   res.send(result)
-})
+// Get all event which a creator make
+app.get("/my-events/:email", async (req, res) => {
+  const { email } = req.params;
+  const result = await eventCollection
+    .find({ eventCreatorEmail: email })
+    .toArray();
+  res.send(result);
+});
+
+//Delete a event
+app.delete("/events/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await eventCollection.deleteOne({ _id: new ObjectId(id) });
+  res.send(result);
+});
 
 // API home page
 app.get("/", (req, res) => {
