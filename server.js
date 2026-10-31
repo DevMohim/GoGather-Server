@@ -1,11 +1,10 @@
-import express from 'express'
-import cors from 'cors'
-import 'dotenv/config'
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
 import { MongoClient } from "mongodb";
 
-
-const app = express()
-const port = process.env.PORT
+const app = express();
+const port = process.env.PORT;
 const client = new MongoClient(process.env.MONGO_URI);
 
 export async function connectToMongoDB() {
@@ -17,23 +16,31 @@ export async function connectToMongoDB() {
     console.dir(err);
   }
 }
-const connectedClient = await connectToMongoDB()
-const db = connectedClient.db('GoGather')
-const eventCollection = db.collection('events')
+const connectedClient = await connectToMongoDB();
+const db = connectedClient.db("GoGather");
+const eventCollection = db.collection("events");
 
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
-app.post('/events' , async(req,res) => {
-   const newEventData = req.body
-   const result = await eventCollection.insertOne()
-   res.send(result)
-})
+// Event Create
+app.post("/events", async (req, res) => {
+  const newEventData = req.body;
+  const result = await eventCollection.insertOne(newEventData);
+  res.send(result);
+});
 
-app.get('/', (req,res) => {
-   res.send({ message: "Server running successfully"});
-})
+// Event Read
+app.get("/events", async (req, res) => {
+  const result = await eventCollection.find().toArray();
+  res.send(result);
+});
 
-app.listen(port , ()=> {
-   console.log(`Server running in http://localhost:${port}`)
-})
+// API home page
+app.get("/", (req, res) => {
+  res.send({ message: "Server running successfully" });
+});
+
+app.listen(port, () => {
+  console.log(`Server running in http://localhost:${port}`);
+});
