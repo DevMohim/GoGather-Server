@@ -19,6 +19,7 @@ export async function connectToMongoDB() {
 const connectedClient = await connectToMongoDB();
 const db = connectedClient.db("GoGather");
 const eventCollection = db.collection("events");
+const joinedCollection = db.collection("joined-events")
 
 app.use(cors());
 app.use(express.json());
@@ -69,6 +70,13 @@ app.patch('/events/:id' ,async (req,res) => {
   const updateData = req.body
   const {id} = req.params
   const result = await eventCollection.updateOne({_id : new ObjectId(id)} ,{$set: updateData})
+  res.send(result)
+})
+
+//joined events post API
+app.post('/joined-events' ,async (req,res) =>{
+  const data = req.body
+  const result = await joinedCollection.insertOne(data)
   res.send(result)
 })
 
