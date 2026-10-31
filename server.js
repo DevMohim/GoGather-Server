@@ -48,6 +48,14 @@ app.get('/events/:id' , async(req,res) =>{
    const result = await eventCollection.findOne({_id : new ObjectId(id)})
    res.send(result)
 })
+
+// Get all event which a creator make 
+app.get('/my-events/:email' , async(req,res)=> {
+   const {email} = req.params
+   const result = await eventCollection.find({eventCreatorEmail : email}).toArray()
+   res.send(result)
+})
+
 // API home page
 app.get("/", (req, res) => {
   res.send({ message: "Server running successfully" });
