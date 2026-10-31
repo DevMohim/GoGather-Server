@@ -64,6 +64,16 @@ app.delete("/events/:id", async (req, res) => {
   res.send(result);
 });
 
+// Edited event patch api
+app.patch('/events/:id' ,async (req,res) => {
+  const updateData = req.body
+  const {id} = req.params
+  const result = await eventCollection.updateOne({_id : new ObjectId(id)} ,{$set: updateData})
+  res.send(result)
+})
+
+
+
 // API home page
 app.get("/", (req, res) => {
   res.send({ message: "Server running successfully" });
