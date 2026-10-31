@@ -19,7 +19,7 @@ export async function connectToMongoDB() {
 const connectedClient = await connectToMongoDB();
 const db = connectedClient.db("GoGather");
 const eventCollection = db.collection("events");
-const joinedCollection = db.collection("joined-events")
+const joinedCollection = db.collection("joined-events");
 
 app.use(cors());
 app.use(express.json());
@@ -66,28 +66,43 @@ app.delete("/events/:id", async (req, res) => {
 });
 
 // Edited event patch api
-app.patch('/events/:id' ,async (req,res) => {
-  const updateData = req.body
-  const {id} = req.params
-  const result = await eventCollection.updateOne({_id : new ObjectId(id)} ,{$set: updateData})
-  res.send(result)
-})
+app.patch("/events/:id", async (req, res) => {
+  const updateData = req.body;
+  const { id } = req.params;
+  const result = await eventCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: updateData },
+  );
+  res.send(result);
+});
 
 //joined events post API
-app.post('/joined-events' ,async (req,res) =>{
-  const data = req.body
-  const result = await joinedCollection.insertOne(data)
-  res.send(result)
-})
+app.post("/joined-events", async (req, res) => {
+  const data = req.body;
+  const result = await joinedCollection.insertOne(data);
+  res.send(result);
+});
 
-/// Api for find joined data for a specific event
+// Api for find joined data for a specific event
 app.get("/joined-events/:id", async (req, res) => {
   const { id } = req.params;
   const result = await joinedCollection.find({ eventId: id }).toArray();
   res.send(result);
 });
 
+// Api for find joined data for a specific user
+app.get("/my-joined-events", async (req, res) => {
+  const result = await joinedCollection.find().toArray();
+  res.send(result);
+});
 
+app.get("/my-joined-events/:email", async (req, res) => {
+  const { email } = req.params;
+  const result = await joinedCollection
+    .find({ eventCreatorEmail: email })
+    .toArray();
+  res.send(result);
+});
 
 // API home page
 app.get("/", (req, res) => {
