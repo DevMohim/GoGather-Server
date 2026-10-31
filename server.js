@@ -80,6 +80,13 @@ app.post('/joined-events' ,async (req,res) =>{
   res.send(result)
 })
 
+/// Api for find joined data for a specific event
+app.get("/joined-events/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await joinedCollection.find({ eventId: id }).toArray();
+  res.send(result);
+});
+
 
 
 // API home page
