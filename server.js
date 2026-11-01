@@ -63,7 +63,7 @@ app.get("/events" , async (req, res) => {
   res.send(result);
 });
 //Upcoming Event Read
-app.get("/upcoming-events", async (req, res) => {
+app.get("/events", async (req, res) => {
   const result = await eventCollection.find().toArray();
   res.send(result);
 });
