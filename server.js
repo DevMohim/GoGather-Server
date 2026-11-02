@@ -76,7 +76,7 @@ app.get("/events/:id", async (req, res) => {
 });
 
 // Get all event which a creator make
-app.get("/my-events/:email", async (req, res) => {
+app.get("/my-events/:email",  async (req, res) => {
   const { email } = req.params;
   const result = await eventCollection
     .find({ eventCreatorEmail: email })
@@ -126,7 +126,7 @@ app.get("/my-joined-events", async (req, res) => {
 app.get("/my-joined-events/:email", async (req, res) => {
   const { email } = req.params;
   const result = await joinedCollection
-    .find({ eventCreatorEmail: email })
+    .find({ email: email })
     .toArray();
   res.send(result);
 });
